@@ -1,0 +1,22 @@
+{
+  "name": "mixsecurity",
+  "version": "1.0.0",
+  "description": "Mixsecurity, a discord security bot",
+  "main": "security.js",
+  "scripts": {
+    "start": "node security.js"
+  },
+  "type": "module",
+  "author": "Mixeration",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
+    "fs": "^0.0.1-security"
+  },
+  "imports": {
+    "#events/*": "./events/*",
+    "#commands/*": "./events/commands/*.js"
+  }
+}
