@@ -6,48 +6,53 @@ import fs from 'fs';
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 
-const events = fs
-    .readdirSync('./events')
-    .filter(file => file.endsWith('.js'));
 
-for(let event of events) {
-    const eventFile = await import(`#events/${event}`);
-    if(eventFile.once) {
-        client.once(eventFile.name, (...args) => {
-            eventFile.invoke(...args);
-        });
-    } else {
-        client.on(eventFile.name, (...args) => {
-            eventFile.invoke(...args);
-        });
-    }
-}
-
-client.on('ready', async => {
+client.on('ready', async() => {
     sendLog(1, "Ready", "Bot is online now!")
     client.user.setPresence({
         activities: [{name: 'Mixsecurity', type: ActivityType.Watching}],
         status: 'idle'
     });
-})
 
-client.on('messageCreate', async (message) => {
-    let list = ["mal", "salak"];
-    const currentDate = new Date();
-    const msg = message.content.toLowerCase();
-    const detailedLog = `[Tarih: ${currentDate.getUTCMinutes()}:${currentDate.getUTCHours()}:${currentDate.getUTCDay()} | ${currentDate.getUTCDate()}] [${message.author.tag}], Mesajı: ${message.content.toLowerCase()}`
-    if(message.author.bot) return;
-    if(list.includes(msg)) {
-        message.delete();
-        let newEmbed = new EmbedBuilder()
-            .setTitle("Mixsecurity : Küfür engelleme")
-            .setColor("BLUE")
-            .setDescription("Sohbet kuralları gereğince küfür etmemen gerek !");
-        message.channel.send({embeds: [newEmbed]});
-        sendLog(2, "Küfür Kullanımı", detailedLog);
+    const commands = fs
+        .readdirSync('./commands')
+        .filter((file) => file.endsWith('.js'))
+        .map((file) => file.slice(0, -3));
+
+    const commandsArray = [];
+
+    for (let command of commands) {
+        const commandFile = await import(`./commands/${command}.js`);
+        commandsArray.push(commandFile.create());
     }
 
-});
+    client.application.commands.set(commandsArray);
+
+    const events = fs
+        .readdirSync('./events')
+        .filter(file => file.endsWith('.js'));
+
+    for(let event of events) {
+        const eventFile = await import(`#events/${event}`);
+        if (eventFile.once) {
+            client.once(eventFile.name, (...args) => {
+                eventFile.invoke(...args);
+            });
+        } else {
+            client.on(eventFile.name, (...args) => {
+                eventFile.invoke(...args);
+            });
+        }
+
+    }
+    sendLog(3, "Events", `Loadede events (${events.length}) loaded for ${client.user.username}`);
+    sendLog(3, "Commands", `Loaded commands (${commandsArray.length}) for ${client.user.username}`);
+
+
+
+})
+
+
 
 client.login(process.env.TOKEN).then(r =>
     sendLog(1,"Login", "Bot is logged in !")
