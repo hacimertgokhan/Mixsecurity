@@ -48,10 +48,7 @@ client.on('ready', async() => {
     sendLog(3, "Events", `Loadede events (${events.length}) loaded for ${client.user.username}`);
     sendLog(3, "Commands", `Loaded commands (${commandsArray.length}) for ${client.user.username}`);
 
-
-
 })
-
 
 
 client.login(process.env.TOKEN).then(r =>

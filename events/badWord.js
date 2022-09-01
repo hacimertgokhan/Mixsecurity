@@ -1,22 +1,29 @@
 import sendLog from "../utils/jsLogger.js";
 import {EmbedBuilder} from "discord.js";
+import fs from "fs";
+import yaml from "js-yaml";
 const once = false;
 const name = 'messageCreate';
 
 async function invoke(message) {
-    let list = ["mal", "salak"];
+    let fileContents = fs.readFileSync('./storage/wordlist.yml', 'utf8');
+    let data = yaml.load(fileContents);
+    let getList = data.toString().toLowerCase();
     const currentDate = new Date();
     const msg = message.content.toLowerCase();
-    const detailedLog = `[Tarih: ${currentDate.getUTCMinutes()}:${currentDate.getUTCHours()}:${currentDate.getUTCDay()} | ${currentDate.getUTCDate()}] [${message.author.tag}], Mesajı: ${message.content.toLowerCase()}`
+    const detailedLog = `[Triggered at: ${currentDate.getUTCMinutes()}m:${currentDate.getUTCHours()}h] [${message.author.tag}]: Mesajı: ${message.content.toLowerCase()}`
     if(message.author.bot) return;
-    if(list.includes(msg)) {
+    if(getList.includes(msg)) {
         message.delete();
         let newEmbed = new EmbedBuilder()
-            .setTitle("Mixsecurity : Küfür engelleme")
-            .setColor("BLUE")
-            .setDescription("Sohbet kuralları gereğince küfür etmemen gerek !");
+            .setTitle("(🍁) Mixsecurity")
+            .setColor(0xff6347)
+            .addFields(
+                {name: 'Hey ! You cannot do that !', value: 'Please do not use bad words in chat !', inline: true}
+            )
+            .setThumbnail(message.author.avatarURL());
         message.channel.send({embeds: [newEmbed]});
-        sendLog(2, "Küfür Kullanımı", detailedLog);
+        sendLog(2, "Badword", detailedLog);
     }
 
 };
