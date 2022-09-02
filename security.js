@@ -5,8 +5,6 @@ import fs from 'fs';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
-
-
 client.on('ready', async() => {
     sendLog(1, "Ready", "Bot is online now!")
     client.user.setPresence({
@@ -45,7 +43,7 @@ client.on('ready', async() => {
         }
 
     }
-    sendLog(3, "Events", `Loadede events (${events.length}) loaded for ${client.user.username}`);
+    sendLog(3, "Events", `Loaded events (${events.length}) loaded for ${client.user.username}`);
     sendLog(3, "Commands", `Loaded commands (${commandsArray.length}) for ${client.user.username}`);
 
 })

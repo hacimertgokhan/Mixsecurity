@@ -8,17 +8,6 @@ const create = () => {
     return command.toJSON();
 };
 
-/*
-
-    komut kullanıldı =>>
-        - veri tabanına tarih bilgileri eklendi
-        eğer bot kapandıysa => tekrar açıldığında son tarih verisini kullanır, işlemine devam eder
-         |
-         |-> Eğer çekiliş bittiğinde bot kapalıysa bot tekrar açıldığında çekilişi bitir
-
-
- */
-
 const invoke = async (interaction) => {
     interaction.reply({
             ephemeral: true,
